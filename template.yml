@@ -1,30 +1,37 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Transform: AWS::Serverless-2016-10-31
+Transform: 'AWS::Serverless-2016-10-31'
 Description: Accepts and transforms Facebook data
 Parameters:
   TeamName:
     Type: String
   InputService:
     Type: String
-Resources: 
+Resources:
   SNSTopic:
-    Type: AWS::SNS::Topic
+    Type: 'AWS::SNS::Topic'
     Properties:
-      TopicName: !Sub "${TeamName}-${InputService}-Topic"
+      TopicName:
+        'Fn::Sub': '${TeamName}-${InputService}-Topic'
       Subscription:
-      - Protocol: lambda
-        Endpoint: !GetAtt TransformLambda.Arn
+        - Protocol: lambda
+          Endpoint:
+            'Fn::GetAtt':
+              - TransformLambda
+              - Arn
   InjestLambda:
-    Type: AWS::Serverless::Function
+    Type: 'AWS::Serverless::Function'
     Properties:
-      FunctionName: !Sub "${TeamName}-${InputService}-Ingest"
+      FunctionName:
+        'Fn::Sub': '${TeamName}-${InputService}-Ingest'
       Handler: fb_ingest.handler
       Runtime: python3.6
+      CodeUri: ./
       Policies:
         Statement:
           - Effect: Allow
-            Action: SNS:Publish
-            Resource: !Ref SNSTopic
+            Action: 'SNS:Publish'
+            Resource:
+              Ref: SNSTopic
       Events:
         FBApi:
           Type: Api
@@ -33,21 +40,28 @@ Resources:
             Method: POST
       Environment:
         Variables:
-          SNS_TOPIC_ARN: !Ref SNSTopic
+          SNS_TOPIC_ARN:
+            Ref: SNSTopic
+      Description: ''
+      MemorySize: ''
   TransformLambda:
-    Type: AWS::Serverless::Function
+    Type: 'AWS::Serverless::Function'
     Properties:
-      FunctionName: !Sub "${TeamName}-${InputService}-Transform"
+      FunctionName:
+        'Fn::Sub': '${TeamName}-${InputService}-Transform'
       Handler: fb_transform.handler
       Runtime: python3.6
+      CodeUri: ./
       Events:
         FBSNS:
           Type: SNS
           Properties:
-            Topic: !Ref SNSTopic
+            Topic:
+              Ref: SNSTopic
   TransformInvokePermission:
-    Type: AWS::Lambda::Permission
+    Type: 'AWS::Lambda::Permission'
     Properties:
-      Action: lambda:InvokeFunction
-      FunctionName: !Ref TransformLambda
+      Action: 'lambda:InvokeFunction'
+      FunctionName:
+        Ref: TransformLambda
       Principal: sns.amazonaws.com
