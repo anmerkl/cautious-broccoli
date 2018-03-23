@@ -37,6 +37,19 @@ Resources:
       Environment:
         Variables:
           SNS_TOPIC_ARN: !Ref SNSTopic
+  VerificationLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${TeamName}-${InputService}-Verification"
+      Handler: fb_veri.handler
+      Runtime: python3.6
+      CodeUri: ./
+      Events:
+        FBApi:
+          Type: Api
+          Properties:
+            Path: /PushEvent
+            Method: GET
   TransformLambda:
     Type: AWS::Serverless::Function
     Properties:
