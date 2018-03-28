@@ -2,8 +2,8 @@ version: 0.1
 phases:
   install:
     commands:
-      - aws cloudformation package --template-file template.yml --s3-bucket team1-code --output-template-file packaged_template.yml
+      - aws cloudformation package --template-file template.yml --s3-bucket team2-code --output-template-file packaged_template.yml
 artifacts:
-  type: zip
   files:
-    template.yml
+    - packaged_template.yml
+    - parameters.json
