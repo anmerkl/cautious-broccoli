@@ -22,7 +22,7 @@ Resources:
       FunctionName: !Sub "${TeamName}-${InputService}-Ingest"
       Handler: fb_ingest.handler
       Runtime: python3.6
-      CodeUri: ./
+    CodeUri: ./
       Policies:
         Statement:
           - Effect: Allow
@@ -32,7 +32,7 @@ Resources:
         FBApi:
           Type: Api
           Properties:
-            Path: /PushEvent
+            Path: !Sub "/${InputService}-Event"
             Method: POST
       Environment:
         Variables:
@@ -48,7 +48,7 @@ Resources:
         FBApi:
           Type: Api
           Properties:
-            Path: /PushEvent
+            Path: !Sub "/${InputService}-Event"
             Method: GET
   TransformLambda:
     Type: AWS::Serverless::Function
