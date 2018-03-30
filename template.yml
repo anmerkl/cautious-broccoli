@@ -45,10 +45,10 @@ Resources:
       Runtime: python3.6
       CodeUri: ./
       Events:
-        FBApi:
+        FBVeriApi:
           Type: Api
           Properties:
-            Path: !Sub "/${InputService}-Event"
+            Path: !Sub "/${InputService}-Verification"
             Method: GET
   TransformLambda:
     Type: AWS::Serverless::Function
