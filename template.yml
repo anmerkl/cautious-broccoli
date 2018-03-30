@@ -32,7 +32,7 @@ Resources:
         FBApi:
           Type: Api
           Properties:
-            Path: !Sub "/${InputService}-Event"
+            Path: /PushEvent
             Method: POST
       Environment:
         Variables:
@@ -48,7 +48,7 @@ Resources:
         FBVeriApi:
           Type: Api
           Properties:
-            Path: !Sub "/${InputService}-Verification"
+            Path: /VerifyAPI
             Method: GET
   TransformLambda:
     Type: AWS::Serverless::Function
