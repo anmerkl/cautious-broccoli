@@ -22,6 +22,7 @@ Resources:
       FunctionName: !Sub "${TeamName}-${InputService}-Ingest"
       Handler: fb_ingest.handler
       Runtime: python3.6
+      Timeout: 10
       CodeUri: ./
       Policies:
         Statement:
@@ -43,12 +44,16 @@ Resources:
       FunctionName: !Sub "${TeamName}-${InputService}-Transform"
       Handler: fb_transform.handler
       Runtime: python3.6
+      Timeout: 60
       CodeUri: ./
       Policies:
         Statement:
           - Effect: Allow
             Action: S3:PutObject
             Resource: !GetAtt OutputBucket.Arn
+          - Effect: Allow
+            Action: DynamoDB:PutItem
+            Resource: !GetAtt CustomerTable.Arn
       Events:
         FBSNS:
           Type: SNS
@@ -57,6 +62,7 @@ Resources:
       Environment:
         Variables:
           S3_BUCKET: !Ref OutputBucket
+          CUSTOMER_TABLE: !Ref CustomerTable
   OutputBucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -67,3 +73,31 @@ Resources:
       Action: lambda:InvokeFunction
       FunctionName: !Ref TransformLambda
       Principal: sns.amazonaws.com
+  StreamLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: stream_lambda.handler
+      Runtime: python3.6
+      CodeUri: ./
+      Policies: AWSLambdaDynamoDBExecutionRole
+      Events:
+        Stream:
+          Type: DynamoDB
+          Properties:
+            Stream: !GetAtt CustomerTable.StreamArn
+            BatchSize: 100
+            StartingPosition: LATEST
+  CustomerTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 10
+        WriteCapacityUnits: 10
+      StreamSpecification:
+        StreamViewType: NEW_IMAGE
