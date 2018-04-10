@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>LinkedIn - MB2</title>
+		
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/css/flat-ui.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/js/flat-ui.min.js"></script>
+		
+		<link rel="stylesheet" href="styles.css">
+		<link rel="shortcut icon" href="https://free.clipartof.com/76-Free-Cute-Cartoon-Monkey-Clipart-Illustration.jpg">
+		
+		<script type="text/javascript" src="http://platform.linkedin.com/in.js">
+			api_key:   77y8b7gu91tjv2
+			onLoad:    onLinkedInLoad
+			authorize: true
+			lang:      en_US
+		</script>
+		
+		<script type="text/javascript">
+			// Setup an event listener to make an API call once auth is complete
+			function onLinkedInLoad() {
+				IN.Event.on(IN, "auth", getProfileData);
+			}
+
+			// Handle the successful return from the API call
+			function onSuccess(data) {
+				console.log(data);
+				var items = document.getElementsByClassName("user");
+				for (var i=0; i < items.length; i++) {
+					items[i].classList.toggle('hidden');
+				}
+			}
+
+			// Handle an error response from the API call
+			function onError(error) {
+				console.log(error);
+			}
+
+			// Use the API call wrapper to request the member's basic profile data
+			function getProfileData() {
+				IN.API.Raw("/people/~").result(onSuccess).error(onError);
+			}
+			
+			function onLogOut(){
+				var items = document.getElementsByClassName("user");
+				for (var i=0; i < items.length; i++) {
+					items[i].classList.toggle('hidden');
+				}
+				IN.User.logout();
+			}
+		</script>
+	</head>
+
+	<body>
+		<div class="container">
+			
+			
+			<div class="row">
+				<div class="col-md-12">
+					<nav class="navbar navbar-inverse" role="navigation">
+						<div class="navbar-header">
+							<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-5">
+								<span class="sr-only">Toggle navigation</span>
+							</button>
+							<a class="navbar-brand" href="#">MB Reactor</a>
+						</div>
+						<div class="collapse navbar-collapse" id="navbar-collapse-5">
+							<ul class="nav navbar-nav">
+								<li><a href="#">Facebook<span class="navbar-unread">1</span></a></li>
+								<li class="active"><a href="#">LinkedIn<span class="navbar-unread">1</span></a></li>
+								<li><a href="#">Liberty Mutual</a></li>
+							</ul>
+							<form class="navbar-form navbar-left" action="#" role="search">
+								<div class="form-group">
+									<div class="input-group">
+										<input class="form-control" id="navbarInput-01" type="search" placeholder="Search">
+										<span class="input-group-btn">
+											<button type="submit" class="btn"><span class="fui-search"></span></button>
+										</span>
+									</div>
+								</div>
+							</form>
+							<ul class="nav navbar-nav navbar-right">
+								<li class="user"><a href="#">Log In</a></li>
+								<li class="dropdown user hidden">
+									<a href="#" class="dropdown-toggle" data-toggle="dropdown">Logged In<b class="caret"></b></a>
+									<ul class="dropdown-menu">
+										<li><a href="#">My Profile</a></li>
+										<li><a href="#">Privacy Settings</a></li>
+										<li class="divider"></li>
+										<li><a href="#" onclick="onLogOut()">Log Out</a></li>
+									</ul>
+								</li>
+								<!-- <li> -->
+									<!-- <a href="#"> -->
+										<!-- <span class="visible-sm visible-xs">Settings<span class="fui-gear"></span></span> -->
+										<!-- <span class="visible-md visible-lg"><span class="fui-gear"></span></span> -->
+									<!-- </a> -->
+								<!-- </li> -->
+							</ul>
+						</div>
+					</nav>
+				</div>
+			</div>
+			
+			
+			<div class="row">
+				<div class="col-md-12">
+					<div class="headingbox">
+						<h1 class="heading user">Hello!</h1>
+						<h1 class="heading user hidden">Hello, User!</h1>
+					</div>
+				</div>
+			</div>
+			
+			
+			<div class="row">
+				<div class="col-md-12">
+					<div class="wrapper">
+						<div class="content">
+							
+							
+							<div class="row">
+								<div class="col-md-12">
+									<p class="user">Sign in with LinkedIn to receive easy insurance quotes, all with just a few clicks! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+									<p class="user hidden">You are now logged in! Based on your profile data, we can recommend an insurance plan for you! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-12">
+									<h1 class="user">Sign in with LinkedIn below!</h1>
+									<h1 class="user hidden">We recommend: </h1>
+								</div>
+							</div>
+							
+							<div class="row user">
+								<div class="col-md-12">
+									<script type="in/Login"></script>
+								</div>
+							</div>
+							
+							
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			
+		</div>
+	</body>
+</html>
