@@ -9,12 +9,20 @@ def handler(event, context):
                 'Content-Type': '*/*'
             }
         }
+        webhook = json.loads(event['body'])
+        if webhook['changes'] == 'status':
+            Msg=json.dumps({'changes': webhook})
+        else:
+            Msg= "No relevant information"
         sns = boto3.client('sns')
         sns.publish(
             TopicArn=os.environ['SNS_TOPIC_ARN'],
-            Message=json.dumps({'queryString': event['queryStringParameters'], 'body': event['body']})
+            Message = msg
         )
         return response
+
+
+
     elif event['httpMethod'] == 'GET':
         if event['queryStringParameters']:
             queryParams = event['queryStringParameters']
