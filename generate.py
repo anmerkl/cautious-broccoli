@@ -3,6 +3,7 @@ import requests
 import datetime
 import asyncio
 import sys
+import string
 
 """
 Asynchronously sends POST requests with randomly generated data to the API gateway 
@@ -23,6 +24,46 @@ async def main():
         for i in range (count)
     ]
 
+def rand_text():
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=random.randint(3, 16)))
+
+def gen_change():
+    change = {}
+    field = random.choice(['status', 'work', 'education', 'location', 'activities', 'about'])
+    if field == 'status' or field == 'about':
+        change['value'] = rand_text()
+    elif field == 'education':
+        change['value'] = [
+            {
+                'school': {
+                    'id': random.randint(0, 65536),
+                    'name': rand_text()
+                },
+                'type': random.choice(['High School', 'College']),
+                'id': random.randint(0, 65536)
+            }
+        ]
+    elif field == 'work':
+        change['value'] = [
+            {
+                'employer': {
+                    'id': random.randint(0, 65536),
+                    'name': rand_text()
+                },
+                'id': random.randint(0, 65536)
+            }
+        ]
+    elif field == 'location':
+        change['value'] = {'page': random.randint(0, 65536)}
+        change['verb'] = random.choice(['add', 'edit', 'delete', 'follow', 'remove', 'update'])
+    elif field == 'activities':
+        change['value'] = {'page': random.randint(0, 65536)}
+        change['verb'] = random.choice(['add', 'edit', 'delete', 'follow', 'remove', 'update'])
+    change['field'] = field
+    return change
+
+
+
 def generate():
     obj = random.randint(1, 4)
     if (obj == 1):
@@ -41,10 +82,9 @@ def generate():
         counter += 1
 
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S").__str__()
-
-    changes = ["", 2]
-    changes[0] = 'field'
-    changes[1] = "test2"
+    changes = [
+        gen_change() for _ in range(random.randint(1, 6))
+    ]
 
     JSON = {}
     JSON['entry'] = []
