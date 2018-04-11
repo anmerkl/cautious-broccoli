@@ -10,7 +10,7 @@ def handler(event, context):
             }
         }
         webhook = json.loads(event['body'])
-        if webhook['changes'] == 'Life Event':
+        if webhook['changes'] == 'status':
             Msg=json.dumps({'changes': webhook})
         else:
             Msg= "No relevant information"
