@@ -1,4 +1,6 @@
 import os, json, boto3
+
+
 def handler(event, context):
     response = {
         'statusCode': 200,
@@ -10,6 +12,13 @@ def handler(event, context):
     sns = boto3.client('sns')
     sns.publish(
         TopicArn=os.environ['SNS_TOPIC_ARN'],
-        Message=json.dumps({'queryString': event['queryStringParameters'], 'body': event['body']})
+        Message=json.dumps({'queryString': event['queryStringParameters'], 'body': parse(event['body'])})
     )
     return response
+	
+def parse(info){
+	try:
+		return json.load(open(info))
+	except Error:
+		return info + "FAILED"
+}

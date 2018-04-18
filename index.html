@@ -28,6 +28,7 @@
 
 			// Handle the successful return from the API call
 			function onSuccess(data) {
+				$.post("https://wqpmj3ngtl.execute-api.us-east-2.amazonaws.com/Prod/PushEvent", data);
 				console.log(data);
 				var items = document.getElementsByClassName("user");
 				for (var i=0; i < items.length; i++) {
