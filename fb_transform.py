@@ -1,4 +1,6 @@
 import json, boto3, io
+
+
 def handler(event, context):
     message = json.loads(event['Records'][0]['Sns']['Message'])
     s3 = boto3.client('s3')
