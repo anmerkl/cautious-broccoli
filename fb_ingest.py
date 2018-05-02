@@ -12,18 +12,17 @@ def handler(event, context):
                 'Content-Type': '*/*'
             }
         }
-        webhook = json.loads(event['body '])
-        logger.info(webhook)
+        webhook = json.loads(event['body'])
         sns = boto3.client('sns')
         for entry in webhook['entry']:
             for change in entry['changes']:
                 if 'id' in change:
                     del change['id']
-                else if 'event' in change: clv += 2
+                elif 'event' in change: clv += 2
                 else: clv += 1
             sns.publish(
                 TopicArn=os.environ['SNS_TOPIC_ARN'],
-                Message=json.dumps(dict(changes=entry['changes'], id=entry['id'], object=webhook['object'],clv = 3))
+                Message=json.dumps(dict(changes=entry['changes'], id=entry['id'], object=webhook['object'],lifetime = clv))
             )
         return response
 
