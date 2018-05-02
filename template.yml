@@ -67,6 +67,14 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Sub "${BucketName}"
+  TrainingDataBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: "Team1-TrainingData"
+  ModelBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: "Team1-ModelBucket"
   TransformInvokePermission:
     Type: AWS::Lambda::Permission
     Properties:
@@ -80,6 +88,10 @@ Resources:
       Runtime: python3.6
       CodeUri: ./
       Policies: AWSLambdaDynamoDBExecutionRole
+      Environment:
+        Variables:
+          MODEL_BUCKET: !Ref ModelBucket
+          DATA_BUCKET: !Ref TrainingDataBucket
       Events:
         Stream:
           Type: DynamoDB
