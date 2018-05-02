@@ -2,6 +2,7 @@ import os, json, boto3, logging
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 VERIFY_TOKEN = 'Access_Token'
+clv = 0
 def handler(event, context):
     if event['httpMethod'] == 'POST':
         response = {
@@ -12,15 +13,16 @@ def handler(event, context):
             }
         }
         webhook = json.loads(event['body'])
-        logger.info(webhook)
         sns = boto3.client('sns')
         for entry in webhook['entry']:
             for change in entry['changes']:
                 if 'id' in change:
                     del change['id']
+                elif 'event' in change: clv += 2
+                else: clv += 1
             sns.publish(
                 TopicArn=os.environ['SNS_TOPIC_ARN'],
-                Message=json.dumps(dict(changes=entry['changes'], id=entry['id'], object=webhook['object']))
+                Message=json.dumps(dict(changes=entry['changes'], id=entry['id'], object=webhook['object'],lifetime = clv))
             )
         return response
 
