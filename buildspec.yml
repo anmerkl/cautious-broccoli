@@ -2,6 +2,7 @@ version: 0.1
 phases:
   install:
     commands:
+      - pip install sagemaker
       - aws cloudformation package --template-file template.yml --s3-bucket team1-code --output-template-file packaged_template.yml
 artifacts:
   files:
