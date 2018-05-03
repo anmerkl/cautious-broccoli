@@ -34,6 +34,22 @@
 				for (var i=0; i < items.length; i++) {
 					items[i].classList.toggle('hidden');
 				}
+				
+				var name = "" + data['firstName'] + data['lastName']
+				document.getElementById('name').innerHTML = "Hello, " + data['firstName'] + "!";
+				
+				function sleep(ms) {
+					return new Promise(resolve => setTimeout(resolve, ms));
+				}
+
+				async function demo() {
+					console.log('Taking a break...');
+					await sleep(2000);
+					console.log('Two second later');
+					fetch('http://linkedinsignin.s3-website.us-east-2.amazonaws.com/' + name + ".txt").then(response => response.text()).then((data) => {document.getElementById('clv').innerHTML = data;})
+				}
+				
+				demo();
 			}
 
 			// Handle an error response from the API call
@@ -52,6 +68,7 @@
 					items[i].classList.toggle('hidden');
 				}
 				IN.User.logout();
+				document.getElementById('clv').innerHTML = "We recommend: *loading*";
 			}
 		</script>
 	</head>
@@ -86,7 +103,7 @@
 								</div>
 							</form>
 							<ul class="nav navbar-nav navbar-right">
-								<li class="user"><a href="#">Log In</a></li>
+								<li class="user"><a>Not Logged In</a></li>
 								<li class="dropdown user hidden">
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown">Logged In<b class="caret"></b></a>
 									<ul class="dropdown-menu">
@@ -112,8 +129,8 @@
 			<div class="row">
 				<div class="col-md-12">
 					<div class="headingbox">
-						<h1 class="heading user">Hello!</h1>
-						<h1 class="heading user hidden">Hello, User!</h1>
+						<h1 class="heading user">Sign in via LinkedIn!</h1>
+						<h1 class="heading user hidden" id="name"></h1>
 					</div>
 				</div>
 			</div>
@@ -127,21 +144,21 @@
 							
 							<div class="row">
 								<div class="col-md-12">
-									<p class="user">Sign in with LinkedIn to receive easy insurance quotes, all with just a few clicks! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-									<p class="user hidden">You are now logged in! Based on your profile data, we can recommend an insurance plan for you! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+									<p class="user">Sign in with LinkedIn to receive easy insurance quotes, all with just a few clicks! Please note that by signing in with LinkedIn, you are giving both MB Reactor and Liberty Mutual access to your basic profile data, such as your full name and headline. You can always change your privacy settings after logging in and selecting "Privacy Settings" in the drop-down menu on the right-side of the navbar. You can also log out at any time, but this will also log you out of LinkedIn. By signing in with LinkedIn, you agree to these terms and services.</p>
+									<p class="user hidden">You are now logged in! We can now recommend an insurance plan for you, just based on your LinkedIn data! Please remember that you can always change your privacy settings after logging in and selecting "Privacy Settings" in the drop-down menu on the right-side of the navbar. You can also log out at any time, but this will also log you out of LinkedIn.</p>
 								</div>
 							</div>
 							
 							<div class="row">
 								<div class="col-md-12">
-									<h1 class="user">Sign in with LinkedIn below!</h1>
-									<h1 class="user hidden">We recommend: </h1>
+									<h1 class="user centered">Sign in below!</h1>
+									<h1 class="user hidden" id="clv">We recommend: *loading*</h1>
 								</div>
 							</div>
 							
 							<div class="row user">
 								<div class="col-md-12">
-									<script type="in/Login"></script>
+									<h3 class="user centered">&gt;&gt;&gt; <script type="in/Login"></script> &lt;&lt;&lt;</h3>
 								</div>
 							</div>
 							
