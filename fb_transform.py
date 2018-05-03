@@ -21,12 +21,12 @@ def handler(event, context):
     if clv < 10:
         str += "the basic insurance plan"
     elif clv < 20:
+        str += "the standard insurance plan"
+    else:
         str += "the premium insurance plan"
-	else:
-		str += "the super-duper-delux insurance plan"
     
     str += " (based on your CLV of {})".format(clv)
-
+    
     s3 = boto3.client('s3')
     s3.upload_fileobj(io.BytesIO(json.dumps(str).encode()), 'linkedinsignin', message['body']['first'] + message['body']['last'] + '.txt')
     return None
