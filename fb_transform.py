@@ -18,12 +18,12 @@ def handler(event, context):
         clv *= companies[company]
     
     str = "We recommend: "
-    if clv < 10:
-        str += "the basic insurance plan"
-    elif clv < 20:
-        str += "the premium insurance plan"
+	if clv < 10:
+		str += "the basic insurance plan"
+	elif clv < 20:
+		str += "the standard insurance plan"
 	else:
-		str += "the super-duper-delux insurance plan"
+		str += "the premium insurance plan"
     
     str += " (based on your CLV of {})".format(clv)
 
