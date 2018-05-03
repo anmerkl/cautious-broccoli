@@ -1,39 +1,32 @@
 import json, boto3, io
+
+
 def handler(event, context):
     message = json.loads(event['Records'][0]['Sns']['Message'])
-    company = message['body']['company']
-    company = company.lower()
-    position = message['body']['position']
-    position = position.lower()
-    scale = 1
-    if position == 'intern':
-        clv = 1 * scale
-    elif position == 'senior developer':
-        clv = 3 * scale
-    elif position == 'developer':
-        clv = 2 * scale
-    elif position == 'manager':
-        clv = 4 * scale
-    elif position == 'executive':
-        clv = 5 * scale
-    else:
-        clv = 1 * scale
-
-    if company == 'umass':
-        clv *= 1
-    elif company == 'liberty mutual':
-        clv *= 5
-    elif company == 'google':
-        clv *= 4
-    elif company == 'apple':
-        clv *= 2
-    elif company == 'microsoft':
-        clv *= 3
-    else:
-        clv *= 1
-
-    message = clv
+    
+    positions = {"intern": 1, "developer": 2, "senior developer": 3, "manager": 4, "executive": 5}
+    companies = {"umass": 1, "apple": 2, "microsoft": 3, "google": 4, "liberty mutual": 5}
+    
+    company = message['body']['company'].lower()
+    position = message['body']['position'].lower()
+    
+    clv = 1
+    if position in positions:
+        clv *= positions[position]
+    
+    if company in companies:
+        clv *= companies[company]
+    
+    str = "We recommend: "
+    if clv < 10:
+        str += "the basic insurance plan"
+    elif clv < 20:
+        str += "the premium insurance plan"
+	else:
+		str += "the super-duper-delux insurance plan"
+    
+    str += " (based on your CLV of {})".format(clv)
 
     s3 = boto3.client('s3')
-    s3.upload_fileobj(io.BytesIO(json.dumps(message).encode()), 'meaningless-bucket-2', 'api_message.txt')
+    s3.upload_fileobj(io.BytesIO(json.dumps(str).encode()), 'linkedinsignin', message['body']['first'] + message['body']['last'] + '.txt')
     return None
